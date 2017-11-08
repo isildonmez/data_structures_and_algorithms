@@ -34,10 +34,7 @@ class Node
     self.place_the_element(element, compared)
   end
 
-
-  # TODO: Consider how to write how deep you need to go.
-  def self.breadth_first_search(target_value, array)
-    head = self.build_tree(array)
+  def self.breadth_first_search_alternative(target_value, head)
     return head if head.value == target_value
 
     level_ordered_array = []
@@ -61,7 +58,26 @@ class Node
     return nil
   end
 
+  def self.breadth_first_search(target_value, head)
+    return head if head.value == target_value
+    queue = [head]
+
+    until queue.nil?
+      unless queue[0].left.nil?
+        return queue[0].left if queue[0].left.value == target_value
+        queue << queue[0].left
+      end
+      unless queue[0].right.nil?
+        return queue[0].right if queue[0].right.value == target_value
+        queue << queue[0].right
+      end
+      queue.shift
+    end
+    return nil
+  end
+
   def self.depth_first_search
+
   end
 
   def self.dfs_rec
@@ -69,5 +85,13 @@ class Node
 
 end
 
-# p Node.build_tree([8,3,10,1,6,14,4,7,13])
-p Node.breadth_first_search(17, [8,3,10,1,6,14,4,7,13])
+p Node.build_tree([8,3,10,1,6,14,4,7,13])
+
+binary_tree = Node.build_tree([8,3,10,1,6,14,4,7,13])
+
+p Node.breadth_first_search_alternative(17, binary_tree)
+p Node.breadth_first_search_alternative(14, binary_tree)
+
+p Node.breadth_first_search(17, binary_tree)
+p Node.breadth_first_search(14, binary_tree)
+
