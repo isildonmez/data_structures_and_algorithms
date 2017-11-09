@@ -31,7 +31,7 @@ class Node
       compared = compared.right
     end
 
-    self.place_the_element(element, compared)
+    place_the_element(element, compared)
   end
 
   def self.breadth_first_search_alternative(target_value, head)
@@ -62,7 +62,7 @@ class Node
     return head if head.value == target_value
     queue = [head]
 
-    until queue.nil?
+    until queue.empty?
       unless queue[0].left.nil?
         return queue[0].left if queue[0].left.value == target_value
         queue << queue[0].left
@@ -76,22 +76,47 @@ class Node
     return nil
   end
 
-  def self.depth_first_search
+  def self.depth_first_search(target_value, head)
+    return head if head.value == target_value
+    stack = [head]
 
+    until stack.empty?
+      stack = scan_the_branch(target_value, stack)
+      return stack unless stack.is_a? Array
+    end
+    nil
+  end
+
+  def self.scan_the_branch(target_value, stack)
+    until stack[-1].left.nil?
+      return stack[-1].left if stack[-1].left.value == target_value
+      stack << stack[-1].left
+    end
+    until stack[-1].right
+      stack.pop
+      return [] if stack.empty?
+    end
+    return stack[-1].right if stack[-1].right.value == target_value
+    stack[-1] = stack[-1].right
+    return stack
   end
 
   def self.dfs_rec
   end
 
+
+
 end
 
-p Node.build_tree([8,3,10,1,6,14,4,7,13])
+# p Node.build_tree([8,3,10,1,6,14,4,7,13])
 
 binary_tree = Node.build_tree([8,3,10,1,6,14,4,7,13])
 
-p Node.breadth_first_search_alternative(17, binary_tree)
-p Node.breadth_first_search_alternative(14, binary_tree)
+# p Node.breadth_first_search_alternative(17, binary_tree)
+# p Node.breadth_first_search_alternative(14, binary_tree)
 
-p Node.breadth_first_search(17, binary_tree)
-p Node.breadth_first_search(14, binary_tree)
+# p Node.breadth_first_search(17, binary_tree)
+# p Node.breadth_first_search(14, binary_tree)
 
+p Node.depth_first_search(17, binary_tree)
+p Node.depth_first_search(14, binary_tree)
