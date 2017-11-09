@@ -76,6 +76,7 @@ class Node
     return nil
   end
 
+  # Pre-order: <root><left><right>
   def self.depth_first_search(target_value, head)
     return head if head.value == target_value
     stack = [head]
@@ -101,22 +102,43 @@ class Node
     return stack
   end
 
-  def self.dfs_rec
+  # Pre-order: <root><left><right>
+  def self.dfs_rec(target_value, head)
+    return head if head.value == target_value
+    stack = [head]
+
+    scan_rec(target_value, stack)
   end
 
+  def self.scan_rec(target_value, stack)
+    until stack[-1].left.nil?
+      return stack[-1].left if stack[-1].left.value == target_value
+      stack << stack[-1].left
+    end
+    until stack[-1].right
+      stack.pop
+      return nil if stack.empty?
+    end
+    return stack[-1].right if stack[-1].right.value == target_value
+    stack[-1] = stack[-1].right
 
-
+    scan_rec(target_value, stack)
+  end
 end
 
-# p Node.build_tree([8,3,10,1,6,14,4,7,13])
+p Node.build_tree([8,3,10,1,6,14,4,7,13])
 
 binary_tree = Node.build_tree([8,3,10,1,6,14,4,7,13])
 
-# p Node.breadth_first_search_alternative(17, binary_tree)
-# p Node.breadth_first_search_alternative(14, binary_tree)
+p Node.breadth_first_search_alternative(17, binary_tree)
+p Node.breadth_first_search_alternative(14, binary_tree)
 
-# p Node.breadth_first_search(17, binary_tree)
-# p Node.breadth_first_search(14, binary_tree)
+p Node.breadth_first_search(17, binary_tree)
+p Node.breadth_first_search(14, binary_tree)
 
 p Node.depth_first_search(17, binary_tree)
 p Node.depth_first_search(14, binary_tree)
+
+p Node.dfs_rec(17, binary_tree)
+p Node.dfs_rec(14, binary_tree)
+
