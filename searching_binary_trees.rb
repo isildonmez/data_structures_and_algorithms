@@ -13,7 +13,7 @@ class Node
     for i in 1...array.size
       place_the_element(array[i], head)
     end
-    return head
+    head
   end
 
   def self.place_the_element(element, compared)
@@ -30,8 +30,48 @@ class Node
       end
       compared = compared.right
     end
-
     place_the_element(element, compared)
+  end
+
+  def self.breadth_first_search(target_value, head)
+    return head if head.value == target_value
+    queue = [head]
+
+    until queue.empty?
+      return queue[0] if queue[0] == target_value
+      queue << queue[0].left unless queue[0].left.nil?
+      queue << queue[0].right unless queue[0].right.nil?
+      queue.shift
+    end
+    nil
+  end
+
+  def self.depth_first_search(target_value, head)
+    stack = [head]
+    until stack.empty?
+      return stack[-1] if stack[-1] == target_value
+      last = stack.pop
+      stack << last.left unless last.left.nil?
+      stack << last.right unless last.right.nil?
+    end
+    nil
+  end
+
+  def self.dfs_rec(target_value, head)
+    return nil if head.nil?
+    return head if target_value == head.value
+    result = dfs_rec(target_value, head.left)
+    return result unless result.nil?
+    dfs_rec(target_value, head.right)
+  end
+
+  def self.quick_search(target_value, compared)
+    return nil if compared == nil
+    return compared if target_value == compared.value
+    compared = compared.left if target_value < compared.value
+    compared = compared.right if target_value >= compared.value
+
+    quick_search(target_value, compared)
   end
 
   def self.breadth_first_search_alternative(target_value, head)
@@ -55,74 +95,7 @@ class Node
         current_array
       end.flatten
     end
-    return nil
-  end
-
-  def self.breadth_first_search(target_value, head)
-    return head if head.value == target_value
-    queue = [head]
-
-    until queue.empty?
-      unless queue[0].left.nil?
-        return queue[0].left if queue[0].left.value == target_value
-        queue << queue[0].left
-      end
-      unless queue[0].right.nil?
-        return queue[0].right if queue[0].right.value == target_value
-        queue << queue[0].right
-      end
-      queue.shift
-    end
-    return nil
-  end
-
-  # Pre-order: <root><left><right>
-  def self.depth_first_search(target_value, head)
-    return head if head.value == target_value
-    stack = [head]
-
-    until stack.empty?
-      stack = scan_the_branch(target_value, stack)
-      return stack unless stack.is_a? Array
-    end
     nil
-  end
-
-  def self.scan_the_branch(target_value, stack)
-    until stack[-1].left.nil?
-      return stack[-1].left if stack[-1].left.value == target_value
-      stack << stack[-1].left
-    end
-    until stack[-1].right
-      stack.pop
-      return [] if stack.empty?
-    end
-    return stack[-1].right if stack[-1].right.value == target_value
-    stack[-1] = stack[-1].right
-    return stack
-  end
-
-  # Pre-order: <root><left><right>
-  def self.dfs_rec(target_value, head)
-    return head if head.value == target_value
-    stack = [head]
-
-    scan_rec(target_value, stack)
-  end
-
-  def self.scan_rec(target_value, stack)
-    until stack[-1].left.nil?
-      return stack[-1].left if stack[-1].left.value == target_value
-      stack << stack[-1].left
-    end
-    until stack[-1].right
-      stack.pop
-      return nil if stack.empty?
-    end
-    return stack[-1].right if stack[-1].right.value == target_value
-    stack[-1] = stack[-1].right
-
-    scan_rec(target_value, stack)
   end
 end
 
@@ -139,6 +112,11 @@ p Node.breadth_first_search(14, binary_tree)
 p Node.depth_first_search(17, binary_tree)
 p Node.depth_first_search(14, binary_tree)
 
+p Node.depth_first_search_alternative(17, binary_tree)
+p Node.depth_first_search_alternative(14, binary_tree)
+
 p Node.dfs_rec(17, binary_tree)
 p Node.dfs_rec(14, binary_tree)
 
+p Node.quick_search(17, binary_tree)
+p Node.quick_search(14, binary_tree)
