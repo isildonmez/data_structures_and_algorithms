@@ -18,9 +18,7 @@ class Node
       current_node = queue.shift
 
       current_node.coordinate_options = to_add.map do |coord|
-        new_coord = []
-        new_coord[0] = current_node.coordinate[0] + coord[0]
-        new_coord[1] = current_node.coordinate[1] + coord[1]
+        new_coord = current_node.coordinate.zip(coord).map{ |arr| arr[0] + arr[1] }
         new_coord = nil unless new_coord.any? {|num| num.between?(0,7)}
         new_coord
       end.compact
